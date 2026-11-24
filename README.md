@@ -28,7 +28,7 @@ cad/          параметрические модели (CadQuery)
   stand.py        корпус + крышка подставки (все размеры — параметры в начале)
   xiao_seeed.py   официальная модель XIAO (Seeed) → координаты проекта
   assembly.py     сборка + проверка пересечений
-  vendor/seeed/   STEP XIAO nRF52840 Plus от Seeed Studio (CC BY-SA 4.0, см. NOTICE.md)
+  vendor/seeed/   STEP XIAO nRF52840 и nRF52840 Plus от Seeed Studio (CC BY-SA 4.0, см. NOTICE.md)
 exports/      готовые STEP/STL (генерируются, но лежат в репо для удобства)
 docs/         спецификация, BOM, схема, картинки
 firmware/     прошивка XIAO (в работе)
@@ -55,10 +55,11 @@ make            # glass → components → xiao → stand → assembly
 - [x] Габаритная модель стекла (по обрисовке на клетке, точность ~±1 мм)
 - [x] Подставка v1, сборка без пересечений
 - [ ] Переснять контур стекла (кубики-магниты + отпечаток на миллиметровке) и обновить гнездо
-- [x] Официальная модель XIAO в сборке: USB-C по центру окна (зазоры ~0.35 мм), прижим над экраном с зазором 0.09 мм
+- [x] Официальная модель XIAO nRF52840 в сборке: USB-C по центру окна (зазоры ~0.35 мм), прижим над RF-экраном с зазором 0.13 мм
+  (вариант Plus: `XIAO_VARIANT=plus make`)
 - [ ] Место под TTP223 в отсеке
 - [ ] Прошивка: эффекты, сенсор, таймер, BLE
 
 ## Сторонние материалы
 
-3D-модель Seeed Studio XIAO nRF52840 Plus — © Seeed Studio, CC BY-SA 4.0 (`cad/vendor/seeed/`).
+3D-модели Seeed Studio XIAO nRF52840 и nRF52840 Plus — © Seeed Studio, CC BY-SA 4.0 (`cad/vendor/seeed/`).

@@ -3,7 +3,12 @@ import paths
 paths.enter_out()
 from stand import body, lid, Z_SHELF, Z_DIFF, Z_GLASS, LID_T, XIAO_CX, BAT_CX, CAV_W
 
+from pathlib import Path
+
 def load(n): return cq.importers.importStep(f"components/{n}.step").val()
+
+# официальная модель Seeed, если сгенерирована (make xiao), иначе габаритная
+XIAO_MODEL = "xiao_nrf52840_seeed" if Path("components/xiao_nrf52840_seeed.step").exists() else "xiao_nrf52840"
 
 def place(shape, rot=None, pos=(0, 0, 0), zmin=None):
     s = shape
@@ -22,7 +27,7 @@ parts = {
     "diffuser": (place(diff, pos=(0, 0, Z_DIFF)), (1, 1, 0.92, 0.8)),
     "alu":     (place(alu, pos=(0, 0, Z_SHELF)), (0.6, 0.6, 0.62, 1)),
     "strip":   (place(load("led_strip_sk6812_18px"), pos=(0, 0, Z_SHELF + 0.8)), (0.95, 0.95, 0.95, 1)),
-    "xiao":    (place(load("xiao_nrf52840"), rot=[((0, 0, 1), 180)], pos=(XIAO_CX, 0, LID_T)), (0.1, 0.45, 0.2, 1)),
+    "xiao":    (place(load(XIAO_MODEL), rot=[((0, 0, 1), 180)], pos=(XIAO_CX, 0, 0), zmin=LID_T), (0.1, 0.45, 0.2, 1)),
     "battery": (place(load("lipo_603450"), rot=[((0, 0, 1), 180)], pos=(BAT_CX, 0, 0), zmin=LID_T), (0.75, 0.75, 0.78, 1)),
     "mosfet":  (place(load("mosfet_to220"), rot=[((1, 0, 0), 90), ((0, 0, 1), 90)], pos=(-30, 0, 0), zmin=LID_T + 0.5), (0.12, 0.12, 0.12, 1)),
     "cap":     (place(load("cap_220uF_6x11"), rot=[((0, 1, 0), 90)], pos=(-10, 9, 0), zmin=LID_T + 0.2), (0.15, 0.3, 0.8, 1)),
@@ -31,14 +36,35 @@ parts = {
 }
 
 B, Ld = body.val(), lid.val()
+
+def _bb_overlap(a, b, tol=0.01):
+    A, C = a.BoundingBox(), b.BoundingBox()
+    return not (A.xmax < C.xmin - tol or C.xmax < A.xmin - tol or A.ymax < C.ymin - tol or
+                C.ymax < A.ymin - tol or A.zmax < C.zmin - tol or C.zmax < A.zmin - tol)
+
+def overlap(a, b):
+    """Объём пересечения по отдельным солидам (сложные чужие STEP иначе ломают булевы операции)."""
+    v, failed = 0.0, 0
+    for sa in a.Solids():
+        for sb in b.Solids():
+            if not _bb_overlap(sa, sb):
+                continue
+            try:
+                v += sa.intersect(sb).Volume()
+            except Exception:
+                failed += 1
+    return v, failed
+print(f"XIAO: {XIAO_MODEL}")
 print("Проверка пересечений (мм³):")
 names = list(parts)
 for n in names:
     s = parts[n][0]
     for other, os_ in [("корпус", B), ("крышка", Ld)] + [(m, parts[m][0]) for m in names if m > n]:
-        v = s.intersect(os_).Volume()
+        v, failed = overlap(s, os_)
         if v > 0.01:
             print(f"  ! {n} × {other}: {v:.2f}")
+        if failed:
+            print(f"  ? {n} × {other}: {failed} пар солидов не удалось проверить")
 print("готово")
 
 asm = cq.Assembly(name="nightlight_stand")

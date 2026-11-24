@@ -1,3 +1,0 @@
-cadquery>=2.4
-numpy
-schemdraw>=0.19

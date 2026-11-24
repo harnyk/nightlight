@@ -51,11 +51,15 @@ firmware/     прошивка XIAO (в работе)
 
 ## Сборка моделей
 
+Зависимости ведёт [uv](https://docs.astral.sh/uv/) (`pyproject.toml` + `uv.lock`, Python 3.13).
+
 ```bash
-python3 -m venv .venv && . .venv/bin/activate
-pip install -r requirements.txt
-make            # glass → components → real → xiao → stand → assembly
+uv sync         # создаст .venv с зафиксированными версиями (cadquery, numpy, schemdraw)
+make            # glass → components → real → xiao → stand → assembly (все шаги через `uv run`)
+make schematic  # принципиальная схема → docs/img/schematic.svg
 ```
+
+Отдельный скрипт: `uv run python cad/stand.py`. Новая зависимость: `uv add <пакет>`.
 
 Результат — в `exports/`. Принципиальная схема: `make schematic` → `docs/img/schematic.svg`. Открыть можно во FreeCAD (File → Import для сборки), F3D или слайсере.
 

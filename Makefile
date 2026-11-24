@@ -1,7 +1,10 @@
-PY ?= python3
+PY ?= uv run --project .. python
 
-.PHONY: all glass components real xiao stand assembly schematic clean
+.PHONY: setup all glass components real xiao stand assembly schematic clean distclean
 all: assembly
+
+setup:
+	uv sync
 
 glass:
 	cd cad && $(PY) glass.py
@@ -17,7 +20,10 @@ assembly: components real xiao stand
 	cd cad && $(PY) assembly.py
 
 schematic:
-	$(PY) docs/schematic.py
+	uv run python docs/schematic.py
 
 clean:
 	rm -rf exports/*.step exports/*.stl exports/components cad/__pycache__
+
+distclean: clean
+	rm -rf .venv

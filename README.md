@@ -16,7 +16,9 @@
 | Ключ ленты | N-MOSFET TO-220 (IRLB8721PbF / IRLZ44N), low-side |
 | Кнопка | TTP223 + медная фольга за стенкой 1.2 мм |
 
-Полный список деталей — [docs/BOM.md](docs/BOM.md), схема — [docs/wiring.md](docs/wiring.md),
+![Принципиальная схема](docs/img/schematic.svg)
+
+Полный список деталей — [docs/BOM.md](docs/BOM.md), подключение — [docs/wiring.md](docs/wiring.md),
 решения и размеры — [docs/spec.md](docs/spec.md).
 
 ## Структура
@@ -32,7 +34,7 @@ cad/          параметрические модели (CadQuery)
   vendor/seeed/   STEP XIAO nRF52840 и nRF52840 Plus от Seeed Studio (CC BY-SA 4.0, см. NOTICE.md)
   vendor/kicad/   STEP из библиотеки KiCad (CC BY-SA 4.0 + исключение KiCad, см. NOTICE.md)
 exports/      готовые STEP/STL (генерируются, но лежат в репо для удобства)
-docs/         спецификация, BOM, схема, картинки
+docs/         спецификация, BOM, схема (schematic.py → img/schematic.svg), картинки
 firmware/     прошивка XIAO (в работе)
 ```
 
@@ -55,7 +57,7 @@ pip install -r requirements.txt
 make            # glass → components → real → xiao → stand → assembly
 ```
 
-Результат — в `exports/`. Открыть можно во FreeCAD (File → Import для сборки), F3D или слайсере.
+Результат — в `exports/`. Принципиальная схема: `make schematic` → `docs/img/schematic.svg`. Открыть можно во FreeCAD (File → Import для сборки), F3D или слайсере.
 
 ## Печать
 

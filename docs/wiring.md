@@ -1,5 +1,9 @@
 # Схема подключения
 
+![Принципиальная схема](img/schematic.svg)
+
+Исходник схемы — [schematic.py](schematic.py) (schemdraw). Ниже — то же в ASCII.
+
 ```
             LiPo 603450 (с защитой)
               +            −

@@ -1,17 +1,19 @@
 PY ?= python3
 
-.PHONY: all glass components xiao stand assembly clean
+.PHONY: all glass components real xiao stand assembly clean
 all: assembly
 
 glass:
 	cd cad && $(PY) glass.py
 components: glass
 	cd cad && $(PY) components.py
+real:
+	cd cad && $(PY) parts_real.py
 xiao:
 	cd cad && $(PY) xiao_seeed.py
 stand:
 	cd cad && $(PY) stand.py
-assembly: components xiao stand
+assembly: components real xiao stand
 	cd cad && $(PY) assembly.py
 
 clean:

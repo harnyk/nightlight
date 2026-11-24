@@ -27,19 +27,32 @@ cad/          параметрические модели (CadQuery)
   components.py   габаритные модели компонентов
   stand.py        корпус + крышка подставки (все размеры — параметры в начале)
   xiao_seeed.py   официальная модель XIAO (Seeed) → координаты проекта
+  parts_real.py   реальные модели остальных компонентов (KiCad + по даташитам)
   assembly.py     сборка + проверка пересечений
   vendor/seeed/   STEP XIAO nRF52840 и nRF52840 Plus от Seeed Studio (CC BY-SA 4.0, см. NOTICE.md)
+  vendor/kicad/   STEP из библиотеки KiCad (CC BY-SA 4.0 + исключение KiCad, см. NOTICE.md)
 exports/      готовые STEP/STL (генерируются, но лежат в репо для удобства)
 docs/         спецификация, BOM, схема, картинки
 firmware/     прошивка XIAO (в работе)
 ```
+
+## Отсек электроники
+
+![Отсек электроники](docs/img/electronics_bay.png)
+
+| Компонент | Модель |
+|---|---|
+| XIAO nRF52840 | официальная, Seeed Studio |
+| MOSFET TO-220, резисторы 0207, электролит ⌀6.3, светодиоды SK6812 | библиотека KiCad |
+| Модуль TTP223 | собран из моделей KiCad (SOT-23-6, 0603) на плате 15×11 по типовому модулю |
+| Пара JST-PH 2.0, LiPo 603450, флекс-плата ленты | по даташитам / типовым чертежам (моделей производителя нет) |
 
 ## Сборка моделей
 
 ```bash
 python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt
-make            # glass → components → xiao → stand → assembly
+make            # glass → components → real → xiao → stand → assembly
 ```
 
 Результат — в `exports/`. Открыть можно во FreeCAD (File → Import для сборки), F3D или слайсере.
@@ -57,9 +70,11 @@ make            # glass → components → xiao → stand → assembly
 - [ ] Переснять контур стекла (кубики-магниты + отпечаток на миллиметровке) и обновить гнездо
 - [x] Официальная модель XIAO nRF52840 в сборке: USB-C по центру окна (зазоры ~0.35 мм), прижим над RF-экраном с зазором 0.13 мм
   (вариант Plus: `XIAO_VARIANT=plus make`)
-- [ ] Место под TTP223 в отсеке
+- [x] Реальные модели всех компонентов в сборке и раскладка отсека (см. ниже), пересечений нет
+- [ ] Провода в модели (пока нет)
 - [ ] Прошивка: эффекты, сенсор, таймер, BLE
 
 ## Сторонние материалы
 
-3D-модели Seeed Studio XIAO nRF52840 и nRF52840 Plus — © Seeed Studio, CC BY-SA 4.0 (`cad/vendor/seeed/`).
+- 3D-модели Seeed Studio XIAO nRF52840 и nRF52840 Plus — © Seeed Studio, CC BY-SA 4.0 (`cad/vendor/seeed/`).
+- 3D-модели компонентов из библиотеки KiCad — CC BY-SA 4.0 с исключением KiCad (`cad/vendor/kicad/`).

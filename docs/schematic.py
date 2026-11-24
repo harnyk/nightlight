@@ -31,7 +31,7 @@ def block(d, x0, y0, w, h, title, left=(), right=(), stub=1.0):
 
 
 with schemdraw.Drawing(show=False) as d:
-    d.config(unit=2.0)
+    d.config(unit=2.0, bgcolor="white")
 
     # ---------------- U1: XIAO nRF52840 ----------------
     u1 = block(d, 7, 0, 4, 6, "U1  Seeed XIAO nRF52840",
@@ -124,6 +124,6 @@ with schemdraw.Drawing(show=False) as d:
         "4. Зарядка 100 мА: P0.13 = LOW (по умолчанию 50 мА). Назначение D0/D1/D2 — предварительное.",
         halign="left", valign="top", fontsize=9)
 
-    d.save(str(OUT / "schematic.svg"))
-    d.save(str(OUT / "schematic.png"), dpi=150)
+    d.save(str(OUT / "schematic.svg"), transparent=False)
+    d.save(str(OUT / "schematic.png"), dpi=150, transparent=False)
 print("ok")
